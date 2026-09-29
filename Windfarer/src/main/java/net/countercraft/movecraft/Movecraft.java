@@ -97,6 +97,7 @@ public class Movecraft extends JavaPlugin {
         Settings.ReleaseOnDeath = getConfig().getBoolean("ReleaseOnDeath", false);
         Settings.ManOverboardCooldown = getConfig().getInt("ManoverboardCooldown", 30);
         Settings.suppressRedstoneEventOnMovingCrafts = getConfig().getBoolean("SuppressRedstoneEventsOnMovingCrafts", true);
+        Settings.WarheadsDrainWaterloggedBlocks = getConfig().getBoolean("WarheadsDrainWaterloggedBlocks", false);
 
         Settings.displayBlockLists = getConfig().getBoolean("DisplayBlockLists", false);
         Settings.displayBlockListsAtlasName = getConfig().getString("DisplayBlockListsAtlasName", "minecraft:blocks");

@@ -55,6 +55,7 @@ public class Settings {
     public static boolean ReleaseOnDeath = false;
     public static boolean displayBlockLists = false;
     public static boolean suppressRedstoneEventOnMovingCrafts = true;
+    public static boolean WarheadsDrainWaterloggedBlocks = false;
     public static String displayBlockListsAtlasName = "minecraft:blocks";
     public static String displayBlockListsAtlasPrefix = "block/";
     public static long maxElapsedTimeForWorldChanges = 50000;

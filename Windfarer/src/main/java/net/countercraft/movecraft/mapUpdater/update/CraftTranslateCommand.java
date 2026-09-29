@@ -175,7 +175,9 @@ public class CraftTranslateCommand extends UpdateCommand {
 
                 }
             }
-//            waterlog();
+            if (!craft.getCraftProperties().get(PropertyKeys.ALLOW_WATERLOGGED)){
+                dewaterlog();
+            }
         }
         if (!craft.isNotProcessing())
             craft.setProcessing(false);
@@ -266,6 +268,39 @@ public class CraftTranslateCommand extends UpdateCommand {
                 continue;
             }
             ((Waterlogged) data).setWaterlogged(shouldFlood);
+            block.setBlockData(data);
+        }
+    }
+
+    private void dewaterlog(){
+        final int minX = craft.getHitBox().getMinX();
+        final int maxX = craft.getHitBox().getMaxX();
+        final int minY = craft.getHitBox().getMinY();
+        final int maxY = craft.getHitBox().getMaxY();
+        final int minZ = craft.getHitBox().getMinZ();
+        final int maxZ = craft.getHitBox().getMaxZ();
+        final HitBox[] surfaces = {
+                new SolidHitBox(new MovecraftLocation(minX, minY, minZ), new MovecraftLocation(minX, maxY, maxZ)),
+                new SolidHitBox(new MovecraftLocation(minX, minY, minZ), new MovecraftLocation(maxX, maxY, minZ)),
+                new SolidHitBox(new MovecraftLocation(maxX, minY, maxZ), new MovecraftLocation(minX, maxY, maxZ)),
+                new SolidHitBox(new MovecraftLocation(maxX, minY, maxZ), new MovecraftLocation(maxX, maxY, minZ)),
+                new SolidHitBox(new MovecraftLocation(minX, minY, minZ), new MovecraftLocation(maxX, minY, maxZ))};
+        final MutableHitBox validExterior = new BitmapHitBox();
+        for (HitBox surface : surfaces) {
+            for(var location : surface){
+                if(!craft.getHitBox().contains(location)){
+                    validExterior.add(location);
+                }
+            }
+        }
+        var hull = hullSearch(validExterior);
+        for(var location : hull){
+            var block = location.toBukkit(world).getBlock();
+            var data = block.getBlockData();
+            if(!(data instanceof Waterlogged)){
+                continue;
+            }
+            ((Waterlogged) data).setWaterlogged(false);
             block.setBlockData(data);
         }
     }

@@ -202,6 +202,8 @@ public class PropertyKeys {
             register(PropertyKeyTypes.intPropertyKey(
                     key("movement/cruise/vert_skip_blocks"), t -> t.get(CRUISE_SKIP_BLOCKS).get()
             ).perWorld().immutable());
+    public static final PropertyKey<Boolean> ALLOW_WATERLOGGED =
+            register(PropertyKeyTypes.boolPropertyKey(key("constraints/allow_waterlogged"), t -> false).immutable());
     public static final PropertyKey<Boolean> FOCUSED_EXPLOSION =
             register(PropertyKeyTypes.boolPropertyKey(key("movement/collision/explosion/focused"), t -> false).immutable());
     public static final PropertyKey<Boolean> MUST_BE_SUBCRAFT =

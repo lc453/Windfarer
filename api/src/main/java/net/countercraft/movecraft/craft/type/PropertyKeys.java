@@ -120,6 +120,8 @@ public class PropertyKeys {
             register(PropertyKeyTypes.blockSetPropertyKey(key("harvester/harvester_blocks")).immutable());
     public static final PropertyKey<BlockSetProperty> PASSTHROUGH_BLOCKS =
             register(PropertyKeyTypes.blockSetPropertyKey(key("movement/passthrough_blocks")).immutable());
+    public static final PropertyKey<BlockSetProperty> DISINTEGRATE_BLOCKS =
+            register(PropertyKeyTypes.blockSetPropertyKey(key("movement/disintegrate_blocks")).immutable());
     public static final PropertyKey<BlockSetProperty> FORBIDDEN_HOVER_OVER_BLOCKS =
             register(PropertyKeyTypes.blockSetPropertyKey(key("constraints/movement/hover/forbidden_blocks")).immutable());
     public static final PropertyKey<BlockSetProperty> DYNAMIC_FLY_BLOCKS =

@@ -58,6 +58,7 @@ public class CraftTranslateCommand extends UpdateCommand {
         World oldWorld = craft.getWorld();
         final BlockSetProperty passthroughBlocks = new BlockSetProperty(
                 craft.getCraftProperties().get(PropertyKeys.PASSTHROUGH_BLOCKS));
+        final BlockSetProperty disintegrateBlocks = new BlockSetProperty(craft.getCraftProperties().get(PropertyKeys.DISINTEGRATE_BLOCKS));
         if (craft instanceof SinkingCraft) {
             passthroughBlocks.addEnumSet(Tags.FLUID);
             passthroughBlocks.addTag(Tag.LEAVES);
@@ -81,6 +82,9 @@ public class CraftTranslateCommand extends UpdateCommand {
                 var toMoveBlock = location.toBukkit(craft.getWorld()).getBlock();
                 var data = toMoveBlock.getBlockData();
                 if (passthroughBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))) {
+                    if (disintegrateBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))){
+                        continue;
+                    }
                     craft.getPhaseBlocks().put(location.toBukkit(world), data);
                 }
             }
@@ -125,6 +129,9 @@ public class CraftTranslateCommand extends UpdateCommand {
                 var data = toMoveBlock.getBlockData();
                 if (!passthroughBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock)))
                     continue;
+                if (disintegrateBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))) {
+                    continue;
+                }
 
                 craft.getPhaseBlocks().put(location.toBukkit(world), data);
             }
@@ -170,6 +177,9 @@ public class CraftTranslateCommand extends UpdateCommand {
                 var toMoveBlock = location.toBukkit(craft.getWorld()).getBlock();
                 var data = toMoveBlock.getBlockData();
                 if (passthroughBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))) {
+                    if (disintegrateBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))){
+                        continue;
+                    }
                     craft.getPhaseBlocks().put(bukkit, data);
                     handler.setBlockFast(bukkit, Material.AIR.createBlockData());
 

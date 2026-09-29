@@ -189,6 +189,10 @@ public class TranslationTask extends FuelAwareAsyncTask {
                 if (harvesterBladeBlocks.size() > 0 && harvesterBladeBlocks.contains(tmpType)) {
                     blockObstructed = false;
                     harvestedBlocks.add(newLocation);
+                    // If the harvested block is below the waterline, add water to phaseblocks
+                    if (!craft.getCraftProperties().get(PropertyKeys.BLOCKED_BY_WATER) && (newLocation.getY() <= craft.getCraftProperties().get(PropertyKeys.STATIC_WATER_LEVEL, craft.getWorld()))){
+                        craft.getPhaseBlocks().put(newLocation.toBukkit(craft.getWorld()), Material.WATER.createBlockData());
+                    }
                 }
             }
 

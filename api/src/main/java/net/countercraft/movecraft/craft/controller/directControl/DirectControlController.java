@@ -103,7 +103,7 @@ public class DirectControlController implements ConfigurationSerializable {
 
         // TODO: Proper offhand support!
         ItemStack offhand = pilot.getInventory().getItemInOffHand();
-        if (offhand == null || offhand.isEmpty()) {
+        if (offhand == null || offhand.isEmpty() || this.SLOTS[OFFHAND_SLOT] == null) {
             int currentSlot = pilot.getInventory().getHeldItemSlot();
             if (currentSlot < 0 || currentSlot > this.SLOTS.length) {
                 return null;

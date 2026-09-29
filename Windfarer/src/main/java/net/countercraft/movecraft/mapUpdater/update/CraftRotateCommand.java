@@ -1,5 +1,6 @@
 package net.countercraft.movecraft.mapUpdater.update;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.MovecraftLocation;
@@ -23,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
+import org.bukkit.block.data.Waterlogged;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -181,6 +183,9 @@ public class CraftRotateCommand extends UpdateCommand {
 
                 }
             }
+            if (!craft.getCraftProperties().get(PropertyKeys.ALLOW_WATERLOGGED)){
+                dewaterlog();
+            }
         } else {
             //translate the craft
 
@@ -205,6 +210,66 @@ public class CraftRotateCommand extends UpdateCommand {
                 0,
                 new BitmapHitBox(this.craft.getHitBox())
         ));
+    }
+    
+    private void dewaterlog(){
+        final int minX = craft.getHitBox().getMinX();
+        final int maxX = craft.getHitBox().getMaxX();
+        final int minY = craft.getHitBox().getMinY();
+        final int maxY = craft.getHitBox().getMaxY();
+        final int minZ = craft.getHitBox().getMinZ();
+        final int maxZ = craft.getHitBox().getMaxZ();
+        final HitBox[] surfaces = {
+                new SolidHitBox(new MovecraftLocation(minX, minY, minZ), new MovecraftLocation(minX, maxY, maxZ)),
+                new SolidHitBox(new MovecraftLocation(minX, minY, minZ), new MovecraftLocation(maxX, maxY, minZ)),
+                new SolidHitBox(new MovecraftLocation(maxX, minY, maxZ), new MovecraftLocation(minX, maxY, maxZ)),
+                new SolidHitBox(new MovecraftLocation(maxX, minY, maxZ), new MovecraftLocation(maxX, maxY, minZ)),
+                new SolidHitBox(new MovecraftLocation(minX, minY, minZ), new MovecraftLocation(maxX, minY, maxZ))};
+        final MutableHitBox validExterior = new BitmapHitBox();
+        for (HitBox surface : surfaces) {
+            for(var location : surface){
+                if(!craft.getHitBox().contains(location)){
+                    validExterior.add(location);
+                }
+            }
+        }
+        var hull = hullSearch(validExterior);
+        for(var location : hull){
+            var block = location.toBukkit(craft.getWorld()).getBlock();
+            var data = block.getBlockData();
+            if(!(data instanceof Waterlogged)){
+                continue;
+            }
+            ((Waterlogged) data).setWaterlogged(false);
+            block.setBlockData(data);
+        }
+    }
+
+    @NotNull
+    private LinkedList<MovecraftLocation> hullSearch(MutableHitBox validExterior) {
+        var shifts = new MovecraftLocation[]{new MovecraftLocation(0,-1,0),
+                new MovecraftLocation(1,0,0),
+                new MovecraftLocation(-1,0,0),
+                new MovecraftLocation(0,0,1),
+                new MovecraftLocation(0,0,-1)};
+        var hull = new LinkedList<MovecraftLocation>();
+        var craftBox = craft.getHitBox();
+        Queue<MovecraftLocation> queue = Lists.newLinkedList(validExterior);
+        var visited = new BitmapHitBox(validExterior);
+        while (!queue.isEmpty()){
+            var top = queue.poll();
+            if(craftBox.contains(top)){
+                hull.add(top);
+            }
+            for(var shift : shifts){
+                var shifted = top.add(shift);
+                if(craftBox.inBounds(shifted) && visited.add(shifted)){
+                    queue.add(shifted);
+                }
+
+            }
+        }
+        return hull;
     }
 
     private void sendSignEvents() {

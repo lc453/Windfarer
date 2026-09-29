@@ -75,6 +75,9 @@ public class CraftRotateCommand extends UpdateCommand {
                 var data = toMoveBlock.getBlockData();
                 if (passthroughBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))) {
                     if (disintegrateBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))){
+                        if (!craft.getCraftProperties().get(PropertyKeys.BLOCKED_BY_WATER) && (location.getY() <= craft.getCraftProperties().get(PropertyKeys.STATIC_WATER_LEVEL, craft.getWorld()))){
+                            craft.getPhaseBlocks().put(location.toBukkit(craft.getWorld()), Material.WATER.createBlockData());
+                        }
                         continue;
                     }
                     craft.getPhaseBlocks().put(location.toBukkit(craft.getWorld()), data);
@@ -138,6 +141,9 @@ public class CraftRotateCommand extends UpdateCommand {
                     continue;
                 }
                 if (disintegrateBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))) {
+                    if (!craft.getCraftProperties().get(PropertyKeys.BLOCKED_BY_WATER) && (location.getY() <= craft.getCraftProperties().get(PropertyKeys.STATIC_WATER_LEVEL, craft.getWorld()))){
+                        craft.getPhaseBlocks().put(location.toBukkit(craft.getWorld()), Material.WATER.createBlockData());
+                    }
                     continue;
                 }
                 craft.getPhaseBlocks().put(location.toBukkit(craft.getWorld()), data);
@@ -174,6 +180,9 @@ public class CraftRotateCommand extends UpdateCommand {
                 var data = toMoveBlock.getBlockData();
                 if (passthroughBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))) {
                     if (disintegrateBlocks.contains(NamespacedIDUtil.getBlockID(toMoveBlock))){
+                        if (!craft.getCraftProperties().get(PropertyKeys.BLOCKED_BY_WATER) && (location.getY() <= craft.getCraftProperties().get(PropertyKeys.STATIC_WATER_LEVEL, craft.getWorld()))){
+                            craft.getPhaseBlocks().put(location.toBukkit(craft.getWorld()), Material.WATER.createBlockData());
+                        }
                         continue;
                     }
                     craft.getPhaseBlocks().put(bukkit, data);
